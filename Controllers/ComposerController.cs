@@ -13,13 +13,16 @@ namespace LabelSongsAPI.Controllers
     {
         private readonly IComposerRepository _composerRepository;
         private readonly ILabelRepository _labelRepository;
+        private readonly ISongRepository _songRepository;
+
         public IMapper _mapper;
 
-        public ComposerController(IComposerRepository composerRepository, IMapper mapper, ILabelRepository labelRepository)
+        public ComposerController(IComposerRepository composerRepository, IMapper mapper, ILabelRepository labelRepository, ISongRepository songRepository)
         {
             _composerRepository = composerRepository;
             _mapper = mapper;
             _labelRepository = labelRepository;
+            _songRepository = songRepository;
         }
 
         [HttpGet]
@@ -44,7 +47,7 @@ namespace LabelSongsAPI.Controllers
             {
                 return NotFound();
             }
-            var song = _mapper.Map<ComposerDTO>(_composerRepository.GetComposer(IdComposer));
+            var song = _mapper.Map<Composer>(_composerRepository.GetComposer(IdComposer));
 
             if (!ModelState.IsValid)
             {
@@ -54,13 +57,18 @@ namespace LabelSongsAPI.Controllers
             return Ok(song);
         }
 
-        [HttpGet("composer/{IdComposer}")]
+        [HttpGet("composer/{IdSong}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ComposerDTO>))]
         [ProducesResponseType(400)]
-        public IActionResult GetComposerOfSong(int IdComposer)
+        public IActionResult GetComposerOfSong(int IdSong)
         {
-            var label = _mapper.Map<ComposerDTO>(
-                    _composerRepository.GetComposerOfSong(IdComposer));
+            if (!_songRepository.SongExists(IdSong))
+            {
+                return NotFound();
+            }
+
+            var label = _mapper.Map<Composer>(
+                    _composerRepository.GetComposerOfSong(IdSong));
 
             if (!ModelState.IsValid)
             {
@@ -70,17 +78,18 @@ namespace LabelSongsAPI.Controllers
             return Ok(label);
         }
 
-        [HttpGet("{IdSong}")]
+        [HttpGet("song/{IdComposer}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<SongDTO>))]
         [ProducesResponseType(400)]
-        public IActionResult GetSongbyComposer(int IdSong)
+        public IActionResult GetSongbyComposer(int IdComposer)
         {
-            if (_composerRepository.HasComposerExists(IdSong))
+            if (!_composerRepository.HasComposerExists(IdComposer))
             {
                 return NotFound();
             }
-            var label = _mapper.Map<SongDTO>(
-                    _composerRepository.GetSongbyComposer(IdSong));
+
+            var label = _mapper.Map<Song>(
+                    _composerRepository.GetSongbyComposer(IdComposer));
 
             if (!ModelState.IsValid)
             {
@@ -93,7 +102,7 @@ namespace LabelSongsAPI.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateComposer([FromBody] ComposerDTO composer, [FromQuery] int IdLabel)
+        public IActionResult CreateComposer([FromBody] ComposerDTO composer, [FromQuery] int LabelId)
         {
             if (composer == null)
             {
@@ -115,8 +124,7 @@ namespace LabelSongsAPI.Controllers
             }
 
             var composerMap = _mapper.Map<Composer>(composer);
-            composerMap.Label = _labelRepository.GetLabelByID(IdLabel);
-
+            composerMap.Label = _labelRepository.GetLabelByID(LabelId);
 
             if (!_composerRepository.CreateComposer(composerMap))
             {
@@ -131,13 +139,13 @@ namespace LabelSongsAPI.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateComposer([FromBody] ComposerDTO composer, [FromQuery] int IdComposer, [FromQuery] int IdLabel)
+        public IActionResult UpdateComposer([FromBody] ComposerDTO composer, [FromQuery] int IdComposer)
         {
             if (composer == null)
             {
                 return BadRequest(ModelState);
             }
-            if (IdComposer != composer.IdComposer)
+            if (IdComposer != composer.Id)
             {
                 return BadRequest(ModelState);
             }
@@ -148,7 +156,6 @@ namespace LabelSongsAPI.Controllers
             }
 
             var composerMap = _mapper.Map<Composer>(composer);
-            composerMap.Label = _labelRepository.GetLabelByID(IdLabel);
 
             if (!_composerRepository.UpdateComposer(composerMap))
             {

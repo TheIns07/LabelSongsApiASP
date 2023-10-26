@@ -40,9 +40,9 @@ namespace LabelSongsAPI.Repository
             return _datacontext.Reviews.Where(r => r.Song.ID == IdSong).ToList();
         }
 
-        public Review GetReview(int id)
+        public Review GetReview(int IdReview)
         {
-            return _datacontext.Reviews.Where(r => r.Id == id).FirstOrDefault();
+            return _datacontext.Reviews.Where(r => r.Id == IdReview).FirstOrDefault();
         }
 
         public ICollection<Review> GetReviews()

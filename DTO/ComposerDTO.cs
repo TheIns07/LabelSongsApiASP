@@ -2,7 +2,7 @@
 {
     public class ComposerDTO
     {
-        public int IdComposer { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

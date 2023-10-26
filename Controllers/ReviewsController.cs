@@ -39,7 +39,7 @@ namespace LabelSongsAPI.Controllers
             return Ok(songs);
         }
 
-        [HttpGet("{IdLabel}")]
+        [HttpGet("getById/{IdReview}")]
         [ProducesResponseType(200, Type = typeof(ReviewDTO))]
         [ProducesResponseType(400)]
         public IActionResult GetReviewByID(int IdReview)
@@ -58,13 +58,13 @@ namespace LabelSongsAPI.Controllers
             return Ok(song);
         }
 
-        [HttpGet("{IdReview}")]
+        [HttpGet("{IdSong}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ReviewDTO>))]
         [ProducesResponseType(400)]
-        public IActionResult GetAllReviewsOfSong(int IdReview)
+        public IActionResult GetAllReviewsOfSong(int IdSong)
         {
             var label = _mapper.Map<ReviewDTO>(
-                    _reviewRepository.GetAllReviewsOfSong(IdReview));
+                    _reviewRepository.GetAllReviewsOfSong(IdSong));
 
             if (!ModelState.IsValid)
             {

@@ -53,7 +53,7 @@ namespace LabelSongsAPI.Controllers
             return Ok(song);
         }
 
-        [HttpGet("labelbycomposer/{labelID}")]
+        [HttpGet("labelbycomposer")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<LabelDTO>))]
         [ProducesResponseType(400)]
         public IActionResult GetLabelByComposerID(int IdComposer)
