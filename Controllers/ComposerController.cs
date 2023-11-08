@@ -67,15 +67,19 @@ namespace LabelSongsAPI.Controllers
                 return NotFound();
             }
 
-            var label = _mapper.Map<Composer>(
-                    _composerRepository.GetComposerOfSong(IdSong));
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return Ok(label);
+            var composerObtained = _mapper.Map<List<ComposerDTO>>(_composerRepository.GetComposerOfSong(IdSong));
+
+            if (composerObtained == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(composerObtained);
         }
 
         [HttpGet("song/{IdComposer}")]
@@ -88,7 +92,7 @@ namespace LabelSongsAPI.Controllers
                 return NotFound();
             }
 
-            var label = _mapper.Map<Song>(
+            var label = _mapper.Map<List<Song>>(
                     _composerRepository.GetSongbyComposer(IdComposer));
 
             if (!ModelState.IsValid)
