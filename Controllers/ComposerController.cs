@@ -3,6 +3,7 @@ using LabelSongsAPI.DTO;
 using LabelSongsAPI.Interfaces;
 using LabelSongsAPI.Models;
 using LabelSongsAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabelSongsAPI.Controllers
@@ -103,7 +104,7 @@ namespace LabelSongsAPI.Controllers
             return Ok(label);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Composer")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateComposer([FromBody] ComposerDTO composer, [FromQuery] int LabelId)
@@ -139,7 +140,7 @@ namespace LabelSongsAPI.Controllers
             return Ok("Success in saving composer!");
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "Composer")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -170,7 +171,7 @@ namespace LabelSongsAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Composer")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

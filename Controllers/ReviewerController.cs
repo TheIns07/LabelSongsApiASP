@@ -3,6 +3,7 @@ using LabelSongsAPI.DTO;
 using LabelSongsAPI.Interfaces;
 using LabelSongsAPI.Models;
 using LabelSongsAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabelSongsAPI.Controllers
@@ -90,7 +91,7 @@ namespace LabelSongsAPI.Controllers
             return Ok("Success in saving reviewer!");
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "Reviewer")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -121,7 +122,7 @@ namespace LabelSongsAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Reviewer")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

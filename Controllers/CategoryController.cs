@@ -3,6 +3,7 @@ using LabelSongsAPI.DTO;
 using LabelSongsAPI.Interfaces;
 using LabelSongsAPI.Models;
 using LabelSongsAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabelSongsAPI.Controllers
@@ -67,7 +68,7 @@ namespace LabelSongsAPI.Controllers
             
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "LabelOwner")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateCategory([FromBody] CategoryDTO category)
@@ -102,7 +103,7 @@ namespace LabelSongsAPI.Controllers
             return Ok("Success in Category song!");
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "LabelOwner")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -133,7 +134,7 @@ namespace LabelSongsAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "LabelOwner")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

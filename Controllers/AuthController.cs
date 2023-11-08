@@ -73,7 +73,19 @@ namespace LabelSongsAPI.Controllers
 
             if (user.TypeOfUser == 1)
             {
-                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                claims.Add(new Claim(ClaimTypes.Role, "LabelOwner"));
+            } 
+            else if(user.TypeOfUser == 2)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Reviewer"));
+            }
+            else if (user.TypeOfUser == 3)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Composer"));
+            } else
+            {
+                claims.Add(new Claim(ClaimTypes.Role, "Guess"));
+
             }
 
             claims.Add(new Claim(ClaimTypes.Role, "Noob"));

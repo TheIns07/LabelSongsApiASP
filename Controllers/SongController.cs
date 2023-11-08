@@ -3,6 +3,7 @@ using LabelSongsAPI.DTO;
 using LabelSongsAPI.Interfaces;
 using LabelSongsAPI.Models;
 using LabelSongsAPI.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -70,7 +71,7 @@ namespace LabelSongsAPI.Controllers
             return Ok(song);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Composer")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateSong([FromBody] SongDTO song)
@@ -107,7 +108,7 @@ namespace LabelSongsAPI.Controllers
             return Ok("Success in saving song!");
         }
 
-            [HttpPost("createFull")]
+            [HttpPost("createFull"), Authorize(Roles = "Composer")]
             [ProducesResponseType(204)]
             [ProducesResponseType(400)]
             public IActionResult CreateSongFull([FromQuery] int IdComposer, [FromQuery] int IdCategory, [FromBody] SongDTO songCreated)
@@ -141,7 +142,7 @@ namespace LabelSongsAPI.Controllers
                 return Ok("Success in saving song!");
             }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "LabelOwner")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -172,7 +173,7 @@ namespace LabelSongsAPI.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "LabelOwner")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
